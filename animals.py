@@ -7,46 +7,35 @@ from sys import exit
 import thread
 #from thread import *
 import random
-#from pprint import pprint
+from pprint import pprint
 #import sys
+#from os import walk
+import glob
 
+def loadBank(bankName):
+	DS='/'
+	bankPath = '/home/pi/voices/'
+	pathBank   = bankPath+bankName+DS
+	return sorted(glob.glob(pathBank+"*.wav"))
+
+banki = ['ptaki','zwierzeta','piano1']
+bank  = loadBank(banki[0])
+pprint(bank)	
 stopMPD = subprocess.Popen(["mpc", "stop"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 pygame.init()
 pygame.display.quit()
 #self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
-
-
 pygame.mixer.init(22050, -16, 1, 1024)
 
-pliki0=[
-'/home/pi/pygame/animals/kot.wav',
-'/home/pi/pygame/animals/pies.wav',
-'/home/pi/pygame/animals/krowa.wav',
-'/home/pi/pygame/animals/kura.wav',
-'/home/pi/pygame/animals/kon.wav'
-]
-
-
-pliki=[
-'/home/pi/pygame/animals/ptaki/wav/slowik1.wav',
-'/home/pi/pygame/animals/ptaki/wav/slowik2.wav',
-'/home/pi/pygame/animals/ptaki/wav/slowik3.wav',
-'/home/pi/pygame/animals/ptaki/wav/puchacz.wav',
-'/home/pi/pygame/animals/ptaki/wav/puszczyk.wav',
-'/home/pi/pygame/animals/ptaki/wav/bogatka.wav',
-'/home/pi/pygame/animals/ptaki/wav/kos.wav',
-'/home/pi/pygame/animals/ptaki/wav/kos2.wav',
-]
-
-sndA = pygame.mixer.Sound(pliki[0])
-sndB = pygame.mixer.Sound(pliki[1])
-sndC = pygame.mixer.Sound(pliki[2])
-sndD = pygame.mixer.Sound(pliki[3])
-sndE = pygame.mixer.Sound(pliki[4])
-sndF = pygame.mixer.Sound(pliki[5])
-sndG = pygame.mixer.Sound(pliki[6])
-sndH = pygame.mixer.Sound(pliki[7])
+sndA = pygame.mixer.Sound(bank[0])
+sndB = pygame.mixer.Sound(bank[1])
+sndC = pygame.mixer.Sound(bank[2])
+sndD = pygame.mixer.Sound(bank[3])
+sndE = pygame.mixer.Sound(bank[4])
+sndF = pygame.mixer.Sound(bank[5])
+sndG = pygame.mixer.Sound(bank[6])
+sndH = pygame.mixer.Sound(bank[7])
 
 
 soundChannelA = pygame.mixer.Channel(0)
@@ -102,15 +91,18 @@ def foo7():
 #time.sleep(2)
 glosy = [foo0,foo1,foo2,foo3,foo4,foo5,foo6,foo7]
 
-  
+tempo = 40;
+ 
 while True:
 	try:
-		czas = (random.randint(1,5)*25) / 50
+		czas = (random.randint(1,5)*10) / tempo
 		glos = random.choice (glosy)
-		print('czas',czas,glos)	
+		print('czas',czas)	
 		glos()
 		sleep(czas)
 	except KeyboardInterrupt:
 		exit()
 	  
-#https://makezine.com/projects/make-33/simple-soundboard/	  
+#https://makezine.com/projects/make-33/simple-soundboard/
+#https://my-little-piano-app.herokuapp.com/
+#https://mrcoles.com/piano/	  
