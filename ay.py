@@ -12,42 +12,28 @@ from pprint import pprint
 import sys
 import os
 import glob
+import argparse
+arg_parser = argparse.ArgumentParser(description='Voice Machine')
+arg_parser.add_argument('-b', '--bank', help='voice bank', default=0)
+arg_parser.add_argument('-t', '--tempo', help='voice playing tempo', default=50)
+arg_parser.add_argument('-v', '--vol', help='audio output volume', default=75)
+args = arg_parser.parse_args()
+tempo   = int(args.tempo)
+vol     = str(args.vol)+'%'
+nrBanku = int(args.bank);
+print('bank=',nrBanku,'tempo=',tempo,'volume=',vol)
 
 # python3 ay.py -t 100 -v 60
-print(sys.version_info)
-ttempo = 0
-vvol = 0
-vol = 75;
-tempo = 50;
-
-#pprint(sys.argv)
-if (len(sys.argv)>2):
-   if (sys.argv[1]=="-t"):
-      ttempo = int(sys.argv[2])
-
-if (ttempo>0):
-   tempo = ttempo
-      
-if (len(sys.argv)>4):
-   if (sys.argv[3]=="-v"):
-      vvol = int(sys.argv[4])
-
-if (vvol>0):
-   vol = vvol
-   
-svol = str(vol)+"%"   
-print('tempo='+str(tempo),'vol='+svol)
-
-
+#print(sys.version_info)
 
 stopMPD = subprocess.Popen(["mpc", "stop"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-setVol  = subprocess.Popen(["amixer", "set","PCM",svol], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+setVol  = subprocess.Popen(["amixer", "set","PCM",vol], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 os.system('sh /home/pi/voices/.killwav.sh')
 
 bankPath = '/home/pi/voices/banks/'
 banki = sorted(glob.glob(bankPath+"*/"))
 ileBankow = len(banki)
-nrBanku   = 0;
+
 
 def loadBank(bankName):
 	return sorted(glob.glob(bankName+"*.wav"))
@@ -77,3 +63,4 @@ while True:
 			bank = loadBank(banki[nrBanku])
 	except KeyboardInterrupt:
 		exit()
+
