@@ -1,4 +1,3 @@
-import os
 import subprocess
 from subprocess import call
 import time
@@ -6,7 +5,6 @@ from time import sleep
 #import RPi.GPIO as GPIO
 from sys import exit
 import thread
-#from thread import *
 import random
 from pprint import pprint
 import sys
