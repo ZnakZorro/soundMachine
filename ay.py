@@ -14,7 +14,7 @@ import os
 import glob
 
 # python3 ay.py -t 100 -v 60
-
+print(sys.version_info)
 ttempo = 0
 vvol = 0
 vol = 75;
@@ -53,7 +53,10 @@ def loadBank(bankName):
 	return sorted(glob.glob(bankName+"*.wav"))
 
 def playThread(foogracz):
-	thread.start_new_thread(foogracz, (0,))
+	_lock = thread.allocate_lock()
+	#_lock.acquire()
+	x=thread.start_new_thread(foogracz, (_lock,))
+	#_lock.release()
 
 step  = 0
 watek = 0 
@@ -69,9 +72,8 @@ while True:
 		watek = (watek+1)%8
 		print(watek,nrBanku,step,'czas',czas)
 		sleep(czas)
-		if (step % 20 == 19):
+		if (step % 3 == 2):
 			nrBanku = (nrBanku + 1) % ileBankow  
 			bank = loadBank(banki[nrBanku])
 	except KeyboardInterrupt:
 		exit()
-
