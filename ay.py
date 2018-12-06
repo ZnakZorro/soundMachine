@@ -43,6 +43,7 @@ for i in range(ileBankow):
 	print(banki[i])
 	bank = loadBank(banki[i]) 
 	bigBank.extend(bank)
+random.shuffle(bigBank)   
 print(bigBank)   
 print('...')
    
@@ -61,14 +62,14 @@ while True:
 	try:
 		step = (step+1)%100
 		czas = (random.randint(0,4)*10) / tempo
-		czas += (2*step/tempo)
+		czas += (5*step/tempo)
 		#glos = random.choice(bank)
 		glos = random.choice(bigBank)
 		foogracz = lambda i: call(["aplay","-q", glos])
 		playThread(foogracz)
 		#watek = (watek+1)%8
 		arr = glos.split('/')
-		print('bank=',nrBanku,'step=',step,'czas=',czas, arr[-2],arr[-1])
+		print(nrBanku,'/',step,'czas=',(format(czas, '.2f')), arr[-2],arr[-1])
 		sleep(czas)
 		if (step % 5 == 4):
 			nrBanku = (nrBanku + 1) % ileBankow  
