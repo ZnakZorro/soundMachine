@@ -2,7 +2,6 @@ import os
 import subprocess
 from subprocess import call
 import time
-
 from time import sleep
 #import RPi.GPIO as GPIO
 from sys import exit
@@ -12,7 +11,6 @@ import random
 from pprint import pprint
 import sys
 import os
-#from os import walk
 import glob
 
 # python3 ay.py -t 100 -v 60
@@ -46,48 +44,28 @@ stopMPD = subprocess.Popen(["mpc", "stop"], stdin=subprocess.PIPE, stdout=subpro
 setVol  = subprocess.Popen(["amixer", "set","PCM",svol], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 os.system('sh /home/pi/voices/.killwav.sh')
 
-
-#banki = ['wind','strings','vocals1','bells','instrumenty','ptaki','zwierzeta','piano1']
-#ileBankow = len(banki)
-
-nrBanku = 0;
-lastVoice=8;
-players=[]
-
 bankPath = '/home/pi/voices/banks/'
 banki = sorted(glob.glob(bankPath+"*/"))
-#print(b)
-pprint(banki)
-print('==========================')
 ileBankow = len(banki)
-
+nrBanku   = 0;
 
 def loadBank(bankName):
-	DS='/'
-	#bankPath = '/home/pi/voices/banks/'
-	#pathBank   = bankPath+bankName+DS
-	pathBank   = bankName
-	return sorted(glob.glob(pathBank+"*.wav"))
+	return sorted(glob.glob(bankName+"*.wav"))
 
-   
-bank = loadBank(banki[nrBanku])
-
-gracz = lambda i: call(["aplay","-q", glos])
-
-def playThread(w):
-	thread.start_new_thread(gracz, (w,))
+def playThread(foogracz):
+	thread.start_new_thread(foogracz, (0,))
 
 step  = 0
 watek = 0 
-   
+bank = loadBank(banki[nrBanku])   
 while True:
 	try:
 		step = (step+1)%100
 		czas = (random.randint(0,4)*10) / tempo
 		czas += (2*step/tempo)
 		glos = random.choice(bank)
-		gracz = lambda i: call(["aplay","-q", glos])
-		playThread(watek)
+		foogracz = lambda i: call(["aplay","-q", glos])
+		playThread(foogracz)
 		watek = (watek+1)%8
 		print(watek,nrBanku,step,'czas',czas)
 		sleep(czas)
@@ -97,12 +75,3 @@ while True:
 	except KeyboardInterrupt:
 		exit()
 
-
-
-      
-#https://makezine.com/projects/make-33/simple-soundboard/
-#https://my-little-piano-app.herokuapp.com/
-#https://mrcoles.com/piano/
-#https://freewavesamples.com/?page=67
-#http://soundbible.com/tags-waves.html 
-#https://ttsmp3.com/text-to-speech/Polish/
