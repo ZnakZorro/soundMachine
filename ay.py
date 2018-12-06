@@ -2,7 +2,6 @@ import subprocess
 from subprocess import call
 import time
 from time import sleep
-#import RPi.GPIO as GPIO
 from sys import exit
 import thread
 import random
@@ -21,6 +20,7 @@ vol     = str(args.vol)+'%'
 nrBanku = int(args.bank);
 print('bank=',nrBanku,'tempo=',tempo,'volume=',vol)
 
+
 # python3 ay.py -t 100 -v 60
 #print(sys.version_info)
 
@@ -36,6 +36,18 @@ ileBankow = len(banki)
 def loadBank(bankName):
 	return sorted(glob.glob(bankName+"*.wav"))
 
+   
+print('...')
+bigBank=[]
+for i in range(ileBankow):
+	print(banki[i])
+	bank = loadBank(banki[i]) 
+	bigBank.extend(bank)
+print(bigBank)   
+print('...')
+   
+   
+   
 def playThread(foogracz):
 	_lock = thread.allocate_lock()
 	#_lock.acquire()
@@ -43,20 +55,22 @@ def playThread(foogracz):
 	#_lock.release()
 
 step  = 0
-watek = 0 
+#watek = 0 
 bank = loadBank(banki[nrBanku])   
 while True:
 	try:
 		step = (step+1)%100
 		czas = (random.randint(0,4)*10) / tempo
 		czas += (2*step/tempo)
-		glos = random.choice(bank)
+		#glos = random.choice(bank)
+		glos = random.choice(bigBank)
 		foogracz = lambda i: call(["aplay","-q", glos])
 		playThread(foogracz)
-		watek = (watek+1)%8
-		print(watek,nrBanku,step,'czas',czas)
+		#watek = (watek+1)%8
+		arr = glos.split('/')
+		print('bank=',nrBanku,'step=',step,'czas=',czas, arr[-2],arr[-1])
 		sleep(czas)
-		if (step % 3 == 2):
+		if (step % 5 == 4):
 			nrBanku = (nrBanku + 1) % ileBankow  
 			bank = loadBank(banki[nrBanku])
 	except KeyboardInterrupt:
