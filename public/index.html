@@ -1,0 +1,136 @@
+<html lang="pl"> 
+<head> 
+<meta charset="utf-8"> 
+<link rel="manifest" href="app.json"> 
+	<title>APP_mini</title> 
+	<meta name="viewport" content="width=device-width,initial-scale=1"> 
+	<meta name="mobile-web-app-capable" content="yes"> 
+	<link rel="icon" type="image/png" size="128x128" href="voicemachime.png"> 
+<style>
+body {margin:0.5em; font:normal 18px verdana;}
+div {padding:0.5em; min-height:2em; background:#f8f8f8; margin-bottom:1em; border-bottom:1px solid silver;}
+a {text-decoration:none;}
+button{padding:0.5em;margin:0.5em 0.25em;}
+.active {background:gray; color:white;}
+@meda screen and (max-width: 640px){
+   body {margin:0.2em}
+}
+</style>
+<script>
+"use strict"
+const $=(y)=>document.querySelector(y);
+const $$=(y)=>document.querySelectorAll(y);
+// DOM READY
+document.addEventListener('DOMContentLoaded', function() {
+
+});// dom ready
+
+function ajx(url,callback){	
+      //console.log(url)
+	fetch(url, {
+		method: 'GET',
+		timeout: 15000,
+		cache: 'no-cache',
+		mode: 'cors', 
+		//credentials: '*',
+		redirect: 'follow',
+		headers: new Headers({'Access-Control-Allow-Origin':'*','Content-Type': 'text/plain'})
+		//headers: new Headers({'Content-Type': 'application/json'})
+	}).then(function(response) {
+		return response.json();
+	}).then(function(tx) {
+		//console.log('ajx text=',tx);
+		if(tx) callback(tx);
+	}).catch(function(err) {
+		console.log(err);
+		
+	});	
+	
+}
+
+let opis = function(r){
+   console.log(r)
+   if (r.tempo) $('#infotempo').innerHTML = r.tempo;
+   if (r.banki) $('#infobanki').innerHTML = r.banki;
+   
+}
+function aj(that,get){
+   //console.log(that)
+   let u = 'http://82.145.73.169:5555/'+get;
+   ajx(u,opis);
+   [].forEach.call($$('button'), function(el) {el.classList.remove('active');});
+   that.classList.add('active');
+}
+
+function rBanks(){
+   let banks =[];
+   [].forEach.call($$('div.banks input'), function(el,i) {
+      console.log(i,el.checked);
+      banks.push(el.checked);
+   });
+   let get = ((banks.map(function(b){return b===true ? 1:0})).toString()).replace(/,/g,'');
+   //console.log(m)
+   //let get = JSON.stringify(banks);
+   //let get = banks.toString();
+   console.log(get)
+   let u = 'http://82.145.73.169:5555/banks/'+get;
+   console.log(u)
+   ajx(u,opis);
+
+   
+}
+</script>
+</head>
+<body>
+
+
+<div class="container">
+<b>TEMPO: </b>
+   <button onClick=aj(this,"tempo/250")>250</button> 
+   <button onClick=aj(this,"tempo/500")>500</button> 
+   <button onClick=aj(this,"tempo/750")>750</button> 
+   <button onClick=aj(this,"tempo/1000")>1000</button> 
+   <button onClick=aj(this,"tempo/2000") class="active">2000</button> 
+   <button onClick=aj(this,"tempo/3000")>3000</button> 
+   <button onClick=aj(this,"tempo/4000")>4000</button> 
+   <button onClick=aj(this,"tempo/5000")>5000</button> 
+   <button onClick=aj(this,"tempo/10000")>10000</button> 
+   <button onClick=aj(this,"tempo/15000")>15000</button> 
+   <button onClick=aj(this,"tempo/30000")>30000</button> 
+   <button onClick=aj(this,"tempo/60000")>60000</button> 
+</div>
+
+
+
+<div class="banks">
+   <span><input onChange="rBanks()" type="checkbox" value="1" checked id="rbank1"><label for="rbank1">Bank1</label></span>
+   <span><input onChange="rBanks()" type="checkbox" value="2" checked id="rbank2"><label for="rbank2">Bank2</label></span>
+   <span><input onChange="rBanks()" type="checkbox" value="3" checked id="rbank3"><label for="rbank3">Bank3</label></span>
+   <span><input onChange="rBanks()" type="checkbox" value="4" checked id="rbank4"><label for="rbank3">Bank4</label></span>
+</div>
+
+<div>
+   <div>Tempo: <span id="infotempo">2000</span> ms</div>
+   <div>Banki: <span id="infobanki">111</span> </div>
+</div> 
+
+<div id="info"></div>
+
+<!--
+<br /><br /><br /><br /><br /><br /><br />
+<div class="container">
+   <a href="./tempo/250">Tempo 250</a><br />
+   <a href="./tempo/500">Tempo 500</a><br />
+   <a href="./tempo/750">Tempo 750</a><br />
+   <a href="./tempo/1000">Tempo 1000</a><br />
+   <a href="./tempo/1500">Tempo 1500</a><br />
+   <a href="./tempo/2000">Tempo 2000</a><br />
+   <a href="./tempo/2500">Tempo 2500</a><br />
+   <a href="./tempo/3000">Tempo 3000</a><br />
+   <a href="./tempo/5000">Tempo 5000</a><br />
+   <a href="./tempo/10000">Tempo 10000</a><br />
+
+</div>
+-->
+</body>
+</html>
